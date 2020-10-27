@@ -8,13 +8,11 @@ const Filter = (props) => {
   };
 
   return (
-    <div>
-      <input 
-        type="text"
-        value={text}
-        onChange={handlerChange}
-      />
-    </div>
+    <input 
+      type="text"
+      value={text}
+      onChange={handlerChange}
+    />
   )
 }
 

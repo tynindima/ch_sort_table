@@ -5,9 +5,10 @@ export const useSort = (initialState) => {
 
   const handlerChange = useCallback((column) => {
     const isSort = value.includes(column);
-    isSort
-      ? setValue(prev => prev.filter(sc => sc !== column))
-      : setValue(prev => [...prev, column]);
+    const sortCallback = isSort
+      ? prev => prev.filter(sc => sc !== column)
+      : prev => [...prev, column];
+    setValue(sortCallback);
   }, [value]);
 
   return {

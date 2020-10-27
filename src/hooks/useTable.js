@@ -5,9 +5,7 @@ import { getSortFunction, getReverseSort } from '../utils/usedSortFunc';
 const useData = ({users}) => {
   const [values, setValue] = useState(users);
   const [sortBy, setSortBy] = useState('');
-  const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
-  const [coordinate, setCoordinate] = useState({ x: null, y: null });
   const [isSortReversed, setIsSortReversed] = useState(false);
   
   const handlerSort = useCallback((header) => {
@@ -20,12 +18,12 @@ const useData = ({users}) => {
     setIsSortReversed(prev => !prev);
   }, [isSortReversed]);
 
-  const handlerBooleanChange = useCallback((id) => {
+  const handlerBooleanChange = useCallback((id, name) => {
     setValue(prev => prev.map(user => {
       if (user.id === id) {
         return {
           ...user,
-          bool: !user.bool
+          [name]: !user[name]
         };
       }
       return user;
@@ -33,19 +31,10 @@ const useData = ({users}) => {
   }, []);
 
   const handlerDelete = useCallback((id) => {
-    const newValues = [...values];
-    const indexDeletedElement = newValues.findIndex(el => el.id === id); 
-    newValues.splice(indexDeletedElement, 1);
-    setValue(newValues);
+    const indexDeletedElement = values.findIndex(el => el.id === id); 
+    values.splice(indexDeletedElement, 1);
+    setValue(values);
   }, [values]);
-
-  const handlerTagglerEdit = useCallback((bool) => {
-    setIsEdit(bool);
-  }, []);
-
-  const handlerGetId = useCallback((id) => {
-    setSelectedId(id);
-  }, []);
 
   const handlerChangeString = useCallback((userData) => {
     setValue(prev => prev.map(user => {
@@ -60,25 +49,17 @@ const useData = ({users}) => {
     }))
   }, [selectedId]);
 
-  const handlerSetCoordinate = useCallback((x, y) => {
-    setCoordinate({x, y});
-  }, []);
-
   return {
     values,
     selectedId,
     isSortReversed,
     sortBy,
-    isEdit,
-    coordinate,
     onSort: handlerSort,
     onChangeBool: handlerBooleanChange,
     onDelete: handlerDelete,
-    onIsEdit: handlerTagglerEdit,
-    onGetId: handlerGetId,
+    onGetId: setSelectedId,
     onChangeUser: handlerChangeString,
-    onSetCoordinate: handlerSetCoordinate
   };
 };
 
-export default useData
+export default useData;

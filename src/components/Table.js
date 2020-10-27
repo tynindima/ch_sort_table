@@ -6,6 +6,7 @@ import useData from "../hooks/useTable"
 import { useChangeValue } from '../hooks/useChangeValue';
 import { getParseJson } from '../utils/usedPars';
 import { useSort } from '../hooks/useSort';
+import { createPaginationArray } from '../utils/createPaginationArray';
 
 //components
 import Pagination from './Pagination/Pagination';
@@ -15,6 +16,7 @@ import Portal from './Modal/Portal';
 import Headers from './Head/Headers';
 import UsersBody from './Body/UsersBody';
 import SortedColumns from './SortedColumns/SortedColumns';
+import { useCoordinate } from '../hooks/useCoordinate';
 
 const SIZE_PAGE = 10;
 
@@ -27,30 +29,28 @@ const Table = (props) => {
     selectedId,
     isSortReversed, 
     sortBy,
-    isEdit,
-    coordinate,
     onSort, 
     onChangeBool,
     onDelete,
-    onIsEdit,
     onGetId,
     onChangeUser,
-    onSetCoordinate
   } = useData(clone);
+  const { coordinate, onSetCoordinate } = useCoordinate();
   const [text, setText] = useState('');
   const currentPage = useChangeValue(0);
   const sortedColumns = useSort(['name', 'surname']);
+  const isEdit = useChangeValue(false);
 
   const columns = clone.headers.map((header) => header.propName);
-
-  const filteredUsers = users.filter(
-    (user) => sortedColumns.value.some(
+  
+  const filterCallback = sortedColumns.value.length 
+    ? (user) => sortedColumns.value.some(
       (column) => user[column].toString().toLowerCase().includes(text.toLowerCase()))
-  );
+    : (user) => user;
 
-  const pagination = Array.from({ length: Math.ceil(filteredUsers.length / SIZE_PAGE) }, (_, i) => i);
+  const filteredUsers = users.filter(filterCallback);
 
-  console.log('table');
+  const pagination = createPaginationArray(filteredUsers, SIZE_PAGE);
 
   useEffect(() => {
     if (pagination.length <= currentPage.value) {
@@ -64,10 +64,11 @@ const Table = (props) => {
     <div className="table-container">
       <Modal>
         <Portal
-          isEdit={isEdit}
+          users={users}
+          isEdit={isEdit.value}
           selectedId={selectedId}
           coordinate={coordinate}
-          onIsEdit={onIsEdit}
+          onIsEdit={isEdit.onChange}
           onChangeUser={onChangeUser}
           onGetId={onGetId}
         />
@@ -96,7 +97,7 @@ const Table = (props) => {
           selectedId={selectedId}
           onChangeBool={onChangeBool}
           onDelete={onDelete}
-          onIsEdit={onIsEdit}
+          onIsEdit={isEdit.onChange}
           onGetId={onGetId}
           onSetCoordinate={onSetCoordinate}
         />

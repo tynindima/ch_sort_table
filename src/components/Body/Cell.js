@@ -3,21 +3,21 @@ import React from 'react';
 import Hightlight from '../../utils/Hightlight';
 
 const Cell = (props) => {
-  const { name, onChange, text } = props;
+  const { name, onChange, text, propName } = props;
 
-  return typeof name === 'boolean'
-    ? <td className="td">
-        <input 
-        type="checkbox" 
+  return <td className="td">
+      {typeof name === 'boolean' ? <input
+        type="checkbox"
         checked={name}
+        name={propName}
         onChange={onChange}
-        />
-      </td>
-    : <td className="td">
+      />
+      :
       <Hightlight
         name={name}
         search={text}
       />
+      }
     </td> 
 ;
   

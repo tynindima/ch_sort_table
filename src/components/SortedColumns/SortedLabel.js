@@ -7,8 +7,9 @@ const SortedLabel = (props) => {
     setSortedColumns
   } = props;
 
-  const handlerChange = () => {
-    setSortedColumns(column);
+  const handlerChange = ({target}) => {
+    // TODO handle checked state
+    setSortedColumns(column, target.checked);
   };
 
   return (

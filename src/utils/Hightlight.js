@@ -9,13 +9,15 @@ const Hightlight = ({name, search}) => {
     const lastIndex = startIndex + search.length;
 
     return (
-      <>{text.substring(0, startIndex)}
+      <>
+        {text.substring(0, startIndex)}
         <span className="highlight">{text.substring(startIndex, lastIndex)}</span>
         {text.substring(lastIndex)}
-      </>)
+      </>
+    );
   }
 
-  return <>{text}</>;
+  return text;
 }
 
 export default Hightlight;

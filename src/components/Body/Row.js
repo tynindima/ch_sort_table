@@ -32,8 +32,8 @@ const Row = React.memo((props) => {
     onGetId(0);
   };
 
-  const handlerChange = () => {
-    onChangeBool(user.id);
+  const handlerChange = ({ target }) => {
+    onChangeBool(user.id, target.name);
   };
 
   const handlerDelete = () => {
@@ -56,15 +56,16 @@ const Row = React.memo((props) => {
     </div>
     : <button onClick={handlerTaggler}>...</button>;
 
-  const userDescription = Object.values(user);
+  const userDescription = Object.entries(user);
 
   return (
     <tr>
       {userDescription.map((item, i) => (
         <Cell
           key={i}
-          name={item}
+          name={item[1]}
           text={text}
+          propName={item[0]}
           onChange={handlerChange}
         />
       ))}

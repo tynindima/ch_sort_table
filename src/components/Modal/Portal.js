@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import './portal.css';
-
-import { useChangeValue } from '../../hooks/useChangeValue';
 
 function areEqual(prev, next) {
   return prev.isEdit === next.isEdit
@@ -11,6 +9,7 @@ function areEqual(prev, next) {
 
 const Portal = React.memo((props) => {
   const { 
+    users,
     isEdit, 
     selectedId,
     coordinate,
@@ -18,14 +17,37 @@ const Portal = React.memo((props) => {
     onIsEdit,
     onChangeUser,
   } = props;
-  const name = useChangeValue('');
-  const surname = useChangeValue('');
-  const age = useChangeValue('');
+
+  const user = users.find(user => user.id === selectedId);
+
+  const initFormData = useMemo(() => {
+    return Object.keys(users[0]).map(item => ({[item]: '', propName: item}))
+  }, []);
+
+  const [formUsers, setFormUsers] = useState(initFormData);
+  
+  const handlerChange = (e) => {
+    const { value, name } = e.target;
+
+    setFormUsers(prev => prev.map((user) => {
+      if (user.propName === name) {
+        return {
+          ...user,
+          [name]: value
+        }
+      }
+      
+      return user;
+    }));
+  };
 
   const toClearAllStates = () => {
-    name.onChange('');
-    surname.onChange('');
-    age.onChange('');
+    setFormUsers(prev => prev.map((user) => {
+      return {
+        ...user,
+        [user.propName]: ''
+      };
+    }));
   };
 
   const handlerClose = () => {
@@ -36,16 +58,27 @@ const Portal = React.memo((props) => {
 
   useEffect(() => {
     onIsEdit(false);
+
+    if (selectedId) {
+      setFormUsers(prev => prev.map(item => {
+        return {
+          ...item,
+          [item.propName]: user[item.propName]
+        }
+      }))
+    }
+    
   }, [selectedId]);
 
   const handlerSubmit = (e) => {
     e.preventDefault();
 
-    const newUserDate = {
-      name: name.value, 
-      surname: surname.value, 
-      age: age.value
-    };
+    const newUserDate = formUsers.reduce((acc, item) => {
+      return {
+        ...acc,
+        [item.propName]: item[item.propName]
+      };
+    }, {});
 
     onChangeUser(newUserDate);
     onIsEdit(false);
@@ -54,50 +87,28 @@ const Portal = React.memo((props) => {
   }
 
   return isEdit
-    ? <div className="container" style={{left: coordinate.x - 300, top: coordinate.y}}>
+    && <div className="container" style={{left: coordinate.x - 300, top: coordinate.y}}>
       <h2 className="portal-title">Editing user</h2>
-      <form onSubmit={handlerSubmit} >
-        <div className="input-box">
-          <label className="portal-label" htmlFor="name">Name : </label>
-          <input 
-            className="portal-input" 
-            type="text" 
-            name="name" 
-            autoComplete="off"
-            value={name.value}
-            onChange={(e) => name.onChange(e.target.value)}
-          />
-        </div>
-        <div className="input-box">
-          <label className="portal-label" htmlFor="surname">Surame : </label>
-          <input 
-            className="portal-input" 
-            type="text" 
-            name="surname" 
-            autoComplete="off"
-            value={surname.value}
-            onChange={(e) => surname.onChange(e.target.value)}
-          />
-        </div>
-        <div className="input-box">
-          <label className="portal-label" htmlFor="age">Age : </label>
-          <input 
-            className="portal-input"
-            type="text"
-            name="age"
-            autoComplete="off"
-            value={age.value}
-            onChange={(e) => age.onChange(e.target.value, e.target.name)}
-          />
-        </div>
-
+      <form onSubmit={handlerSubmit}>
+        {formUsers.map((item => (
+          <div key={item.propName} className="input-box">
+            <label className="portal-label" htmlFor="name">{item.propName} : </label>
+            <input
+              className="portal-input"
+              type="text"
+              name={item.propName}
+              autoComplete="off"
+              value={item[item.propName]}
+              onChange={handlerChange}
+            />
+          </div>
+        )))}
         <div className="box-button">
-          <button type="submit">Edit</button>
-          <button onClick={handlerClose} type="button">Cansel</button>
+          <button type="submit">Apply</button>
+          <button onClick={handlerClose} type="button">Cancel</button>
         </div>
       </form>
     </div>
-    : null;
 }, areEqual);
 
 export default Portal;

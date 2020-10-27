@@ -8,14 +8,14 @@ const HeaderCell = (props) => {
     onSelect(header);
   };
 
-  const arrow = !isSorted ? null : isSortReversed 
+  const arrow = isSortReversed 
     ? <span className="arrow">&uarr;</span> 
     : <span className="arrow">&darr;</span>;
 
   const buttons = propName !== 'change' 
     ? <button className="btn" type="button" onClick={handlerClick}>
         {nameHeader}
-        {arrow}
+        {isSorted && arrow}
       </button>
     : <span>{nameHeader}</span>;
 
@@ -23,7 +23,7 @@ const HeaderCell = (props) => {
     <th className="td">
       {buttons}
     </th>
-    )
+  )
 }
 
 export default HeaderCell;

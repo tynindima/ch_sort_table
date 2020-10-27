@@ -20,7 +20,7 @@ const Headers = React.memo((props) => {
       <tr>
         {heads.map((header, i) => (
           <HeaderCell
-            key={i}
+            key={header.propName}
             isSortReversed={isSortReversed}
             isSorted={header.propName === sortBy}
             header={header}
