@@ -1,0 +1,56 @@
+.table-container {
+  width: 100%;
+  position: relative;
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.td {
+  width: 150px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.td-change {
+  width: 200px;
+}
+
+.btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.arrow {
+  margin-left: 5px;
+}
+
+.paginations {
+  display: flex;
+  margin: 20px 0;
+}
+
+.page {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  text-align: center;
+  line-height: 30px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.currentPage {
+  background-color: grey;
+}
+
+button {
+  cursor: pointer;
+}
+
+.highlight {
+  background-color: lightgreen;
+}
