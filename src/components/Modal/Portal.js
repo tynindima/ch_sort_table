@@ -91,7 +91,8 @@ const Portal = React.memo((props) => {
       <h2 className="portal-title">Editing user</h2>
       <form onSubmit={handlerSubmit}>
         {formUsers.map((item => (
-          <div key={item.propName} className="input-box">
+          item.propName !== 'bool'
+          ?<div key={item.propName} className="input-box">
             <label className="portal-label" htmlFor="name">{item.propName} : </label>
             <input
               className="portal-input"
@@ -102,6 +103,16 @@ const Portal = React.memo((props) => {
               onChange={handlerChange}
             />
           </div>
+            : <div key={item.propName} className="input-box">
+              <label className="portal-label" htmlFor="name">{item.propName} : </label>
+              <input
+                className="portal-input"
+                type="checkbox"
+                name={item.propName}
+                checked={item[item.propName]}
+                onChange={handlerChange}
+              />
+            </div>
         )))}
         <div className="box-button">
           <button type="submit">Apply</button>

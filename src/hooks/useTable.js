@@ -7,7 +7,7 @@ const useData = ({users}) => {
   const [sortBy, setSortBy] = useState('');
   const [selectedId, setSelectedId] = useState(0);
   const [isSortReversed, setIsSortReversed] = useState(false);
-  
+
   const handlerSort = useCallback((header) => {
     
     const sortFunction = getReverseSort(getSortFunction(header), isSortReversed);
@@ -31,9 +31,10 @@ const useData = ({users}) => {
   }, []);
 
   const handlerDelete = useCallback((id) => {
+    const newValues = [...values];
     const indexDeletedElement = values.findIndex(el => el.id === id); 
-    values.splice(indexDeletedElement, 1);
-    setValue(values);
+    newValues.splice(indexDeletedElement, 1);
+    setValue(newValues);
   }, [values]);
 
   const handlerChangeString = useCallback((userData) => {
